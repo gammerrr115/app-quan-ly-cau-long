@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, RefreshControl, Alert } from 'react-native';
-import { Stack, router } from 'expo-router';
-import { useFocusEffect } from '@react-navigation/native';
+import { Stack, router, useFocusEffect } from 'expo-router';
 import { fetchPlayers, updatePaymentStatus, Player } from '../services/api';
 
 export default function HomeScreen() {
