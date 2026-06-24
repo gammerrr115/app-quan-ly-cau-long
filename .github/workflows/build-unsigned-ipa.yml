@@ -1,0 +1,51 @@
+name: Build Unsigned IPA for Sideloadly
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Unsigned iOS IPA
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prebuild iOS
+        run: npx expo prebuild --platform ios --clean
+
+      - name: Install CocoaPods
+        run: cd ios && pod install
+
+      - name: Build App (No Code Signing)
+        run: |
+          cd ios
+          xcodebuild -workspace Caulong.xcworkspace \
+            -scheme Caulong \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_IDENTITY=""
+
+      - name: Package into IPA
+        run: |
+          mkdir -p Payload
+          mv ios/build/Build/Products/Release-iphoneos/Caulong.app Payload/
+          zip -r Caulong.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Caulong-Unsigned-IPA
+          path: Caulong.ipa
