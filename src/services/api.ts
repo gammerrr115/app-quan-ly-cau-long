@@ -54,3 +54,31 @@ export const updatePaymentStatus = async (id: string, paid: boolean) => {
     return { status: 'error' };
   }
 };
+
+export const deletePlayer = async (id: string) => {
+  try {
+    const players = await fetchPlayers();
+    const filtered = players.filter((p) => p.id !== id);
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+    return { status: 'success' };
+  } catch (error) {
+    console.error('Lỗi khi xóa người chơi:', error);
+    return { status: 'error' };
+  }
+};
+
+export const updatePlayer = async (id: string, updatedData: Omit<Player, 'id'>) => {
+  try {
+    const players = await fetchPlayers();
+    const index = players.findIndex((p) => p.id === id);
+    if (index !== -1) {
+      players[index] = { ...players[index], ...updatedData };
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(players));
+      return { status: 'success' };
+    }
+    return { status: 'error' };
+  } catch (error) {
+    console.error('Lỗi khi cập nhật người chơi:', error);
+    return { status: 'error' };
+  }
+};
