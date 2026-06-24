@@ -8,9 +8,11 @@
     "scheme": "caulong",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.gammerrr115.caulong"
     },
     "android": {
+      "package": "com.gammerrr115.caulong",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
